@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Show Event properties</title>
+
+    <style>
+        table { border-collapse: collapse; }
+        thead { font-weight: bold; }
+        td { padding: 2px 10px 2px 10px; }
+
+        .odd { background-color: #efdfef; }
+        .even { background-color: #ffffff; }
+    </style>
+
+    <script>
+
+        /*
+            The DOM HTMLTableElement interface provides some convenience methods for creating and manipulating tables. Two frequently used methods are HTMLTableElement.insertRow and tableRow.insertCell. 
+            -- A table's innerHTML property should never be used to modify a table, although you can use it to write an entire table or the content of a cell.
+            -- If DOM Core methods document.createElement and Node.appendChild are used to create rows and cells, IE requires that they are appended to a tbody element, whereas other browsers will allow appending to a table element (the rows will be added to the last tbody element).
+            -- There are a number of other convenience methods belonging to the table interface that can be used for creating and modifying tables. */
+
+        function showEventProperties(e) {
+          function addCell(row, text) {
+            var cell = row.insertCell(-1);
+            cell.appendChild(document.createTextNode(text));
+          }
+
+          var e = e || window.event;
+          document.getElementById('eventType').innerHTML = e.type;
+
+          var table = document.createElement('table');
+          var thead = table.createTHead();
+          var row = thead.insertRow(-1);
+          var lableList = ['#', 'Property', 'Value'];
+          var len = lableList.length;
+
+          for (var i=0; i<len; i++) {
+            addCell(row, lableList[i]);
+          }
+
+          var tbody = document.createElement('tbody');
+          table.appendChild(tbody);
+
+          for (var p in e) {
+            row = tbody.insertRow(-1);
+            row.className = (row.rowIndex % 2)? 'odd':'even';
+            addCell(row, row.rowIndex);
+            addCell(row, p);
+            addCell(row, e[p]);
+          }
+
+          document.body.appendChild(table);
+        }
+
+        window.onload = function(event){
+          showEventProperties(event);
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Properties of the DOM <span id="eventType"></span> Event Object</h1>    
+</body>
+
+</html>
